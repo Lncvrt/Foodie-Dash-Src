@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Linq;
-using DiscordRPC;
 using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using System.IO;
-using System.Collections;
 
 public class Game : MonoBehaviour
 {
@@ -16,7 +12,6 @@ public class Game : MonoBehaviour
     private float boostLeft = 0f;
     private float slownessLeft = 0f;
     private float screenWidth = 0f;
-    private DiscordRpcClient client = new("1216934858182361148");
     private DateTime startTimestamp = DateTime.UtcNow;
     private RuntimePlatform[] desktopPlatforms = new[] {
         RuntimePlatform.WindowsPlayer,
@@ -46,36 +41,6 @@ public class Game : MonoBehaviour
         GameObject highScoreText = GameObject.Find("HighScoreText");
         highScoreText.GetComponent<TextMesh>().text = $"High Score: {highscore}";
 
-        if (desktopPlatforms.Contains(Application.platform))
-        {
-            client.Initialize();
-            client.SetPresence(new RichPresence()
-            {
-                State = "Playing Foodie Dash",
-                Details = $"Score: 0, High Score: {highscore}",
-                Assets = new Assets()
-                {
-                    LargeImageKey = "https://foodiedash.xytriza.com/assets/bird.png",
-                    LargeImageText = "Foodie Dash",
-                    SmallImageKey = "https://xytriza.com/assets/icon.png",
-                    SmallImageText = "Made by Xytriza!"
-                },
-                Timestamps = new Timestamps()
-                {
-                    Start = startTimestamp
-                },
-                Buttons = new Button[] {
-                    new Button() {
-                        Label = "Play Foodie Dash in browser",
-                        Url = "https://foodiedash.xytriza.com/browser"
-                    },
-                    new Button() {
-                        Label = "Download Foodie Dash",
-                        Url = "https://foodiedash.xytriza.com/download"
-                    }
-                },
-            });
-        }
         if (PlayerPrefs.GetInt("Setting2", 0) == 1 || Application.isMobilePlatform)
         {
             GameObject leftArrow = new GameObject("LeftArrow");
@@ -532,35 +497,6 @@ public class Game : MonoBehaviour
         PlayerPrefs.Save();
         scoreText.GetComponent<TextMesh>().text = "Score: " + score;
         highScoreText.GetComponent<TextMesh>().text = "High Score: " + highscore;
-        if (desktopPlatforms.Contains(Application.platform))
-        {
-            client.SetPresence(new RichPresence()
-            {
-                Details = "Playing Foodie Dash",
-                State = $"Score: {score}, High Score: {highscore}",
-                Assets = new Assets()
-                {
-                    LargeImageKey = "https://foodiedash.xytriza.com/assets/bird.png",
-                    LargeImageText = "Foodie Dash",
-                    SmallImageKey = "https://xytriza.com/assets/icon.png",
-                    SmallImageText = "Made by Xytriza!"
-                },
-                Timestamps = new Timestamps()
-                {
-                    Start = startTimestamp
-                },
-                Buttons = new Button[] {
-                    new Button() {
-                        Label = "Play Foodie Dash in browser",
-                        Url = "https://foodiedash.xytriza.com/browser"
-                    },
-                    new Button() {
-                        Label = "Download Foodie Dash",
-                        Url = "https://foodiedash.xytriza.com/download"
-                    }
-                },
-            });
-        }
     }
 
     private void CheckIfGrounded()
@@ -591,71 +527,5 @@ public class Game : MonoBehaviour
     {
         PlayerPrefs.SetInt("HighScore", highscore);
         PlayerPrefs.Save();
-        if (desktopPlatforms.Contains(Application.platform))
-        {
-            client.Dispose();
-        }
-    }
-
-    void OnApplicationPause(bool pauseStatus)
-    {
-        if (desktopPlatforms.Contains(Application.platform))
-        {
-            client.SetPresence(new RichPresence()
-            {
-                Details = "Idle",
-                State = $"Score: {score}, High Score: {highscore}",
-                Assets = new Assets()
-                {
-                    LargeImageKey = "https://foodiedash.xytriza.com/assets/bird.png",
-                    LargeImageText = "Foodie Dash",
-                    SmallImageKey = "https://xytriza.com/assets/icon.png",
-                    SmallImageText = "Made by Xytriza!"
-                },
-                Buttons = new Button[] {
-                    new Button() {
-                        Label = "Play Foodie Dash in browser",
-                        Url = "https://foodiedash.xytriza.com/browser"
-                    },
-                    new Button() {
-                        Label = "Download Foodie Dash",
-                        Url = "https://foodiedash.xytriza.com/download"
-                    }
-                },
-            });
-        }
-    }
-
-    void OnApplicationFocus(bool focusStatus)
-    {
-        if (desktopPlatforms.Contains(Application.platform))
-        {
-            client.SetPresence(new RichPresence()
-            {
-                Details = "Playing Foodie Dash",
-                State = $"Score: {score}, High Score: {highscore}",
-                Assets = new Assets()
-                {
-                    LargeImageKey = "https://foodiedash.xytriza.com/assets/bird.png",
-                    LargeImageText = "Foodie Dash",
-                    SmallImageKey = "https://xytriza.com/assets/icon.png",
-                    SmallImageText = "Made by Xytriza!"
-                },
-                Timestamps = new Timestamps()
-                {
-                    Start = startTimestamp
-                },
-                Buttons = new Button[] {
-                    new Button() {
-                        Label = "Play Foodie Dash in browser",
-                        Url = "https://foodiedash.xytriza.com/browser"
-                    },
-                    new Button() {
-                        Label = "Download Foodie Dash",
-                        Url = "https://foodiedash.xytriza.com/download"
-                    }
-                },
-            });
-        }
     }
 }
